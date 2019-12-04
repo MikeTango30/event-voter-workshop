@@ -5,12 +5,8 @@ import './App.css';
 function App() {
   return (
       <div>
-          <FeedbackList msg="Patobulintas FeedbackList komponentas" version={2}/>
+        <FeedbackList/>
       </div>
   );
 }
 export default App;
-
-
-
-
