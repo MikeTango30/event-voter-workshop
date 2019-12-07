@@ -4,9 +4,7 @@ import DashboardScore from "./DashboardScore";
 
 import './Dashboard.css';
 
-export default function Dashboard({ feedbackList = [] }){
-    const likes = feedbackList.filter(feedback => feedback.score > 0).length;
-    const dislikes = feedbackList.filter(feedback => feedback.score < 0).length;
+export default function Dashboard({ score = {likeCount: 0, dislikeCount: 0} }){
 
     return (
         <div className="dashboard">
@@ -21,7 +19,9 @@ export default function Dashboard({ feedbackList = [] }){
                 </Typography>
             </div>
             <div className="dashboard__event-score">
-                <DashboardScore likes={likes} dislikes={dislikes}/>
+                <DashboardScore
+                    likes={score && score.likeCount}
+                    dislikes={score && score.dislikeCount}/>
             </div>
         </div>
     );

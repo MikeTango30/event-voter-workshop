@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FeedbackList from "./components/FeedbackList";
 import VideoStream from "./components/VideoStream";
 import PageBox from "./layout/PageBox";
@@ -6,28 +6,40 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Dashboard from "./components/Dashboard";
 import PageControls from "./components/PageControls";
 import AddFeedbackForm from "./components/AddFeedbackForm";
+import * as feedbackStorage from './service/feedbackStorage';
 
 
 import './App.css';
 
-function App() {
-    const initialFeedbackList = [];
-    const eventId = 'WUWz6xmSzbk';
+const DEFAULT_EVENT_ID = 'WUWz6xmSzbk';
 
-    const [feedbackList, setFeedbackList] = useState(initialFeedbackList);
+function App() {
+    const [feedbackList, setFeedbackList] = useState([]);
     const [feedbackFormVisible, setFeedbackFormVisible] = useState(false);
+    const [eventId, setEventId] = useState(DEFAULT_EVENT_ID);
+    const [score, setScore] = useState({ dislikeCount: 0, likeCount: 0 });
+
+
+    useEffect(() => {
+        feedbackStorage.initialize();
+           const pathEventId = window.location.pathname.replace('/', '');
+           if (pathEventId) {
+                 setEventId(pathEventId);
+               }
+         }, []);
+    
+    useEffect(() => {
+           feedbackStorage.listenForListChanges(eventId, newList =>
+                 setFeedbackList(newList)
+               );
+        feedbackStorage.listenForScoreChanges(eventId, newScore =>
+                 setScore(newScore)
+               );
+         }, [eventId]);
 
     function addFeedback(feedbackInput) {
-           const now = new Date();
-           const newEntry = {
-                 id: Math.random(),
-                 name: feedbackInput.name,
-                 datetime: now.toUTCString(),
-                 score: feedbackInput.score,
-                 text: feedbackInput.text
-           };
-           setFeedbackList(prevFeedbackList => [newEntry, ...prevFeedbackList]);
-           hideFeedbackForm();
+        feedbackStorage.addFeedback(eventId, feedbackInput);
+        hideFeedbackForm();
          }
 
     function hideFeedbackForm() {
@@ -57,7 +69,7 @@ function App() {
                     </div>
                     <div className="sub-section">
                         <PageBox>
-                            <Dashboard feedbackList={feedbackList}/>
+                            <Dashboard score={score}/>
                         </PageBox>
                     </div>
                 </div>
