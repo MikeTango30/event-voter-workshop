@@ -1,3 +1,5 @@
+// Paspaudus like ar ne, ne formoje, uzskaityti kaip formos uzpildyma, 14 zingsnyje hint'as
+
 import React, {useEffect, useState} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
