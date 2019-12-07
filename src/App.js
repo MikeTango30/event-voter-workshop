@@ -11,16 +11,24 @@ import AddFeedbackForm from "./components/AddFeedbackForm";
 import './App.css';
 
 function App() {
-    const feedbackList = [
-        {id: '01', name: 'Jonas', datetime: 'YYYY-MM-DD', score: 1, text: 'komentaras kaip vertina Jonas'},
-        {id: '02', name: 'Aldona', datetime: 'YYYY-MM-DD', score: -1, text: 'komentaras kaip vertina Aldona'},
-        {id: '03', name: 'Jonas', datetime: 'YYYY-MM-DD', score: 1, text: 'komentaras kaip vertina Jonas'},
-        {id: '04', name: 'Jonas', datetime: 'YYYY-MM-DD', score: 1, text: 'komentaras kaip vertina Jonas'},
-        {id: '05', name: 'Jonas', datetime: 'YYYY-MM-DD', score: -1, text: 'komentaras kaip vertina Jonas'}
-    ];
+    const initialFeedbackList = [];
     const eventId = 'WUWz6xmSzbk';
 
+    const [feedbackList, setFeedbackList] = useState(initialFeedbackList);
     const [feedbackFormVisible, setFeedbackFormVisible] = useState(false);
+
+    function addFeedback(feedbackInput) {
+           const now = new Date();
+           const newEntry = {
+                 id: Math.random(),
+                 name: feedbackInput.name,
+                 datetime: now.toUTCString(),
+                 score: feedbackInput.score,
+                 text: feedbackInput.text
+           };
+           setFeedbackList(prevFeedbackList => [newEntry, ...prevFeedbackList]);
+           hideFeedbackForm();
+         }
 
     function hideFeedbackForm() {
         setFeedbackFormVisible(false);
@@ -56,7 +64,7 @@ function App() {
             </div>
             <PageControls buttonAction={showFeedbackForm}/>
                {feedbackFormVisible && (
-                 <AddFeedbackForm onCancel={hideFeedbackForm}/>
+                 <AddFeedbackForm onCancel={hideFeedbackForm} onSubmit={addFeedback}/>
                )}
         </>
     );
