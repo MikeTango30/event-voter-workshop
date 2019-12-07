@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FeedbackList from "./components/FeedbackList";
 import VideoStream from "./components/VideoStream";
 import PageBox from "./layout/PageBox";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Dashboard from "./components/Dashboard";
+import PageControls from "./components/PageControls";
+import AddFeedbackForm from "./components/AddFeedbackForm";
 
 
 import './App.css';
@@ -18,6 +20,16 @@ function App() {
     ];
     const eventId = 'WUWz6xmSzbk';
 
+    const [feedbackFormVisible, setFeedbackFormVisible] = useState(false);
+
+    function hideFeedbackForm() {
+        setFeedbackFormVisible(false);
+    }
+
+    function showFeedbackForm(){
+        setFeedbackFormVisible(true);
+    }
+    
     return (
         <>
             <CssBaseline/>
@@ -37,11 +49,15 @@ function App() {
                     </div>
                     <div className="sub-section">
                         <PageBox>
-                            <Dashboard/>
+                            <Dashboard feedbackList={feedbackList}/>
                         </PageBox>
                     </div>
                 </div>
             </div>
+            <PageControls buttonAction={showFeedbackForm}/>
+               {feedbackFormVisible && (
+                 <AddFeedbackForm onCancel={hideFeedbackForm}/>
+               )}
         </>
     );
 }
